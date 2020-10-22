@@ -262,6 +262,7 @@
     <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Models\Min18IfNewMember.cs" />
     <Compile Include="Models\Movie.cs" />
+    <Compile Include="Models\RoleName.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
@@ -498,9 +499,10 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\CustomerForm.cshtml" />
     <Content Include="Views\Home\Details.cshtml" />
-    <Content Include="Views\Movies\Index.cshtml" />
+    <Content Include="Views\Movies\List.cshtml" />
     <Content Include="Views\Movies\MovieForm.cshtml" />
     <Content Include="Views\Movies\Details.cshtml" />
+    <Content Include="Views\Movies\ReadOnlyList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
