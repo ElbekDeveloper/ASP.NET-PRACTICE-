@@ -1,0 +1,166 @@
+﻿@model Vidly.ViewModels.PhoneViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Phones</h2>
+@if (User.IsInRole(Vidly.Models.RoleName.CanManageMovies))
+{
+<p>
+    @Html.ActionLink("Create New", "Create", "Phones", new { @class = "btn btn-primary" })
+    <button class="btn btn-danger" id="delete-button">Delete Chosen</button>
+</p>
+}
+
+<!--
+    
+    Filtering the phone by the price range 
+    Reference for the following code snippet
+    https://www.datatables.net/examples/plug-ins/range_filtering.html
+
+
+-->
+<h4>Filters</h4>
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Min Price</th>
+            <th scope="col">Max Price</th>
+            <th scope="col">Manufacturer</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input type="text" id="min" name="min"></td>
+
+            <td><input type="text" id="max" name="max"></td>
+
+            <td> 
+                @Html.DropDownListFor(c => c.Phone.ManufacturerId, new SelectList(Model.Manufacturers, "Id", "Name"), "Select Manufacturer", new { @class = "form-control", @id= "msds-select" })
+            </td>
+        </tr>
+    </tbody>
+
+</table>
+<table class="table" id="phones">
+    <thead>
+        <tr>
+            <th>
+                Model
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Manufacturer
+            </th>
+            <th>
+                RAM (GB)
+            </th>
+            <th>
+                HDD (GB)
+            </th>
+            <th>
+                Dimension
+            </th>
+            <th>
+                Id
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+
+</table>
+
+
+@section    scripts{
+     <script>
+  
+        /* Custom filtering function which will search data in column four between two values */
+        $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var min = parseInt($('#min').val(), 10);
+                var max = parseInt($('#max').val(), 10);
+                var price = parseFloat(data[1]) || 0; // use data for the price column
+
+                if ((isNaN(min) && isNaN(max)) ||
+                    (isNaN(min) && price <= max) ||
+                    (min <= price && isNaN(max)) ||
+                    (min <= price && price <= max))
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        $(document).ready(function () {
+            var table = $("#phones").DataTable(
+                {
+                    ajax: {
+                        url: "/api/phones",
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "model.name"
+                        },
+                        {
+                            data: "price"
+                        },
+                        {
+                            data: "manufacturer.name"
+                        },
+                        {
+                            data: "ramInGb"
+                        },
+                        {
+                            data: "hddInGb"
+                        },
+                        {
+                            data: "dimensionInInch"
+                        },
+                        {
+                            data: "id",
+                            visible: false
+                        }
+                    ]
+                })
+            // Event listener to the two range filtering inputs to redraw on input
+            $('#min, #max').keyup(function () {
+                table.draw();
+            });
+         
+            $('#phones tbody').on('click', 'tr', function () {
+               
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                    //$('#delete-button').attr('data-phone-id') = 
+                }
+                else {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+            /*
+            $('#delete-button').click(function () {
+                table.row('.selected').remove().draw(false);
+            });
+            */
+            $("#delete-button").click(function () {
+                var button = $(this);
+                bootbox.confirm("Are you sure?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/phones/" + button.attr("data-phone-id"),
+                            method: "DELETE"
+                        });
+                    }
+                });
+            });
+            
+        });
+    </script>
+}

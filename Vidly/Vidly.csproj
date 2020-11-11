@@ -184,9 +184,11 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\CustomersController.cs" />
     <Compile Include="Controllers\API\MoviesController.cs" />
+    <Compile Include="Controllers\API\PhonesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
+    <Compile Include="Controllers\PhonesController.cs" />
     <Compile Include="Dtos\CustomerDto.cs" />
     <Compile Include="Dtos\GenreDto.cs" />
     <Compile Include="Dtos\MovieDto.cs" />
@@ -253,6 +255,18 @@
     <Compile Include="Migrations\202010200455315_AddDataTypeForMoveRelease.Designer.cs">
       <DependentUpon>202010200455315_AddDataTypeForMoveRelease.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202010221241331_AddFieldsToAccount.cs" />
+    <Compile Include="Migrations\202010221241331_AddFieldsToAccount.Designer.cs">
+      <DependentUpon>202010221241331_AddFieldsToAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011100545383_AddPhoneTables.cs" />
+    <Compile Include="Migrations\202011100545383_AddPhoneTables.Designer.cs">
+      <DependentUpon>202011100545383_AddPhoneTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011100546359_PopulatePhoneTables.cs" />
+    <Compile Include="Migrations\202011100546359_PopulatePhoneTables.Designer.cs">
+      <DependentUpon>202011100546359_PopulatePhoneTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -262,11 +276,18 @@
     <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Models\Min18IfNewMember.cs" />
     <Compile Include="Models\Movie.cs" />
+    <Compile Include="Models\Phone.cs" />
+    <Compile Include="Models\References\Color.cs" />
+    <Compile Include="Models\References\Manufacturer.cs" />
+    <Compile Include="Models\References\Material.cs" />
+    <Compile Include="Models\References\Model.cs" />
+    <Compile Include="Models\References\OS.cs" />
     <Compile Include="Models\RoleName.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
     <Compile Include="ViewModels\MovieViewModel.cs" />
+    <Compile Include="ViewModels\PhoneViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -503,6 +524,7 @@
     <Content Include="Views\Movies\MovieForm.cshtml" />
     <Content Include="Views\Movies\Details.cshtml" />
     <Content Include="Views\Movies\ReadOnlyList.cshtml" />
+    <Content Include="Views\Phones\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -565,6 +587,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010200455315_AddDataTypeForMoveRelease.resx">
       <DependentUpon>202010200455315_AddDataTypeForMoveRelease.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010221241331_AddFieldsToAccount.resx">
+      <DependentUpon>202010221241331_AddFieldsToAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011100545383_AddPhoneTables.resx">
+      <DependentUpon>202011100545383_AddPhoneTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011100546359_PopulatePhoneTables.resx">
+      <DependentUpon>202011100546359_PopulatePhoneTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

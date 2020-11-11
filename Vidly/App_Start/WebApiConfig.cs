@@ -14,7 +14,8 @@ namespace Vidly
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             settings.Formatting = Formatting.Indented;
 
-
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
+            = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
