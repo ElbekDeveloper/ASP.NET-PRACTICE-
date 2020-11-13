@@ -18,6 +18,7 @@ namespace Vidly.Controllers
             _context = new ApplicationDbContext();
         }
         // GET: Phones
+        [AllowAnonymous]
         public ActionResult Index()
         {
             PhoneViewModel phoneViewModel = new PhoneViewModel

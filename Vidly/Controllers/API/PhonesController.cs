@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using PhoneStore.Models;
@@ -40,6 +37,10 @@ namespace Vidly.Controllers.API
         [ResponseType(typeof(Phone))]
         public IHttpActionResult GetPhone(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
             Phone phone = db.Phones.Find(id);
             if (phone == null)
             {

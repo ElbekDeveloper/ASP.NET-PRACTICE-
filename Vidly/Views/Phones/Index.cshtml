@@ -1,6 +1,6 @@
 ﻿@model Vidly.ViewModels.PhoneViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "BePro Market - List of Phones";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
 {
 <p>
     @Html.ActionLink("Create New", "Create", "Phones", new { @class = "btn btn-primary" })
-    <button class="btn btn-danger" id="delete-button">Delete Chosen</button>
+    <button class="btn btn-danger" disabled="true" id="delete-button">Delete Chosen</button>
 </p>
 }
 
@@ -37,13 +37,13 @@
             <td><input type="text" id="max" name="max"></td>
 
             <td> 
-                @Html.DropDownListFor(c => c.Phone.ManufacturerId, new SelectList(Model.Manufacturers, "Id", "Name"), "Select Manufacturer", new { @class = "form-control", @id= "msds-select" })
+                @Html.DropDownListFor(c => c.Phone.ManufacturerId, new SelectList(Model.Manufacturers, "Id", "Name"), "Select Manufacturer", new { @class = "form-control", @id= "manufacturerDropdown" })
             </td>
         </tr>
     </tbody>
 
 </table>
-<table class="table" id="phones">
+<table class="table table-hover" id="phones">
     <thead>
         <tr>
             <th>
@@ -67,6 +67,9 @@
             <th>
                 Id
             </th>
+            <th>
+                Manufacturer Id
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -76,8 +79,24 @@
 
 
 @section    scripts{
-     <script>
-  
+    <script>
+        //custom filtering for manufacturer
+        /*
+        $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var manufacturer = $('#manufacturerDropdown').val();
+                var tmanufacturer = data[2]; // use data for the manufacturer column
+                var isSameManuf = manufacturer.valueOf() == tmanufacturer.valueOf();
+                console.log(manufacturer);
+                console.log(tmanufacturer);
+                console.log(isSameManuf);
+                if (isSameManuf == true) {
+                    return true;
+                }
+                return false;
+            }
+        );
+        */
         /* Custom filtering function which will search data in column four between two values */
         $.fn.dataTable.ext.search.push(
             function (settings, data, dataIndex) {
@@ -88,8 +107,7 @@
                 if ((isNaN(min) && isNaN(max)) ||
                     (isNaN(min) && price <= max) ||
                     (min <= price && isNaN(max)) ||
-                    (min <= price && price <= max))
-                {
+                    (min <= price && price <= max)) {
                     return true;
                 }
                 return false;
@@ -125,6 +143,10 @@
                         {
                             data: "id",
                             visible: false
+                        },
+                        {
+                            data: "manufacturerId",
+                            visible: false
                         }
                     ]
                 })
@@ -132,35 +154,55 @@
             $('#min, #max').keyup(function () {
                 table.draw();
             });
-         
+
+            //event listener to dropdown value change
+            $('#manufacturerDropdown').on('change', function () {
+                console.log(this.value);
+                table.columns(7).search(this.value).draw();
+            });
+
             $('#phones tbody').on('click', 'tr', function () {
-               
+
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
-                    //$('#delete-button').attr('data-phone-id') = 
+                    //the id attribute to null
+                    $('#delete-button').attr('data-phone-id', -1);
+                    //disable button
+                    $('#delete-button').prop('disabled', true);
                 }
                 else {
+                    //remove selected class from other rows
                     table.$('tr.selected').removeClass('selected');
+                    //add this class to current row
                     $(this).addClass('selected');
+
+                    // var idx = table.cell('.selected', 0).index();
+                    var idx = table.cell('.selected', 0).index();
+                    var data = table.row(idx.row).data();
+                    var id = data.id;
+                    $('#delete-button').attr('data-phone-id', id);
+                    //enable button
+                    $('#delete-button').prop('disabled', false);
                 }
             });
-            /*
-            $('#delete-button').click(function () {
-                table.row('.selected').remove().draw(false);
-            });
-            */
+
             $("#delete-button").click(function () {
                 var button = $(this);
+                //remove row from the UI
+                table.row('.selected').remove().draw(false);
+                //remove row from the backend
                 bootbox.confirm("Are you sure?", function (result) {
                     if (result) {
+
                         $.ajax({
                             url: "/api/phones/" + button.attr("data-phone-id"),
                             method: "DELETE"
                         });
+                        button.attr('disabled', true);
                     }
                 });
             });
-            
+
         });
-    </script>
+    </script> 
 }
